@@ -1,0 +1,74 @@
+# Workspace snapshot scope: keep active code and docs, drop historical, local, and generated surfaces.
+
+# Historical and runtime-only workspace roots
+/_archive/
+/_logs/
+/_locks/
+/_sandbox/
+/models/
+
+# Dependency installs and build output
+**/node_modules/
+**/.pnpm-store/
+**/.next/
+**/dist/
+**/build/
+**/coverage/
+**/.cache/
+**/.turbo/
+**/.parcel-cache/
+**/.vite/
+**/tsconfig.tsbuildinfo
+**/.vercel/
+
+# Python caches and local envs
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv/
+**/venv/
+
+# Local env, secret, and machine-specific files
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+!**/.env.template
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.crt
+**/*service-account*.json
+**/credentials*.json
+
+# Editor, OS, and transient logs
+**/.DS_Store
+**/Thumbs.db
+**/.idea/
+**/.windsurf/
+**/*:Zone.Identifier
+**/*.log
+**/tmp/
+**/temp/
+
+# Large binary historical docs
+/_docs/Old_Bibles/
+
+# Nested git repos — tracked separately
+/projects/
+/gateways/
+
+# One-off migration scripts
+/migrate_seed_to_cloud.py
+
+# Workspace-specific generated and local-state surfaces
+/gateways/openclaw/workspace/.openclaw/workspace-state.json
+/gateways/openclaw/sandbox/experiments/evolution-reel-studio/node_modules/
+/gateways/openclaw/sandbox/experiments/evolution-reel-studio/public/clips/
+/gateways/openclaw/sandbox/experiments/evolution-reel-studio/public/overlays/*.mp4
+/projects/reel-generator/assets/
+/projects/Evolution_Platform/public/videos/
+/DNA/vault/
