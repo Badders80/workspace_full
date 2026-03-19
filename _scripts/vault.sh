@@ -4,9 +4,12 @@
 # Simple health check for the central vault
 # ═══════════════════════════════════════════════════════════
 
-EVO_ROOT="/home/evo"
-VAULT="$EVO_ROOT/.env"
-TEMPLATE="$EVO_ROOT/00_DNA/vault/env.template"
+CONTROL_ROOT="/home/evo"
+WORKSPACE_ROOT="$CONTROL_ROOT/workspace"
+PROJECT_ROOT="$WORKSPACE_ROOT/projects"
+VAULT="$CONTROL_ROOT/.env"
+TEMPLATE="$WORKSPACE_ROOT/DNA/vault/env.template"
+SCHEMA="$WORKSPACE_ROOT/DNA/vault/env.schema"
 
 # Colors for output
 RED='\033[0;31m'
@@ -29,7 +32,7 @@ Commands:
   help        Show this help
 
 The vault is simple:
-  - ONE file: /evo/.env (master)
+  - ONE file: /home/evo/.env (master)
   - All projects symlink to it
   - Never commit .env files
 
@@ -46,9 +49,12 @@ validate_vault() {
     fi
     
     # Load schema and check required keys
-    local schema="$EVO_ROOT/00_DNA/vault/env.schema"
     local missing=0
     local warnings=0
+
+    if [[ ! -f "$SCHEMA" ]]; then
+        echo -e "${YELLOW}⚠${NC} Validation schema missing at $SCHEMA"
+    fi
     
     echo "Checking required environment variables..."
     echo ""
@@ -115,24 +121,32 @@ check_vault() {
     
     # 2. Check project symlinks
     echo "📁 Project Symlinks"
-    local projects=($EVO_ROOT/projects/Evolution_*)
+    local project_dirs=()
+    if [[ -d "$PROJECT_ROOT" ]]; then
+        shopt -s nullglob
+        project_dirs=( "$PROJECT_ROOT"/Evolution_* )
+        shopt -u nullglob
+    else
+        echo -e "${YELLOW}⚠${NC} Projects root missing: $PROJECT_ROOT"
+    fi
+
     local linked=0
     local missing=0
-    
-    for proj in "${projects[@]}"; do
+
+    for proj in "${project_dirs[@]}"; do
         if [[ -d "$proj" ]]; then
             local name=$(basename "$proj")
             if [[ -L "$proj/.env" ]]; then
                 local target=$(readlink "$proj/.env")
-                if [[ "$target" == "/evo/.env" ]] || [[ "$target" == "$VAULT" ]]; then
-                    echo -e "${GREEN}✅${NC} $name → /evo/.env"
+                if [[ "$target" == "$VAULT" ]]; then
+                    echo -e "${GREEN}✅${NC} $name → $VAULT"
                     ((linked++))
                 else
                     echo -e "${YELLOW}⚠️ ${NC} $name → $target (unexpected target)"
                     ((missing++))
                 fi
             else
-                echo -e "${RED}❌${NC} $name - no symlink (fix: cd $proj && ln -sf /evo/.env .env)"
+                echo -e "${RED}❌${NC} $name - no symlink (fix: cd $proj && ln -sf /home/evo/.env .env)"
                 ((missing++))
             fi
         fi

@@ -7,30 +7,39 @@
 > Evaluation queue -> DNA/ops/TECH_RADAR.md (consult on demand, not auto-loaded)
 > Decision rationale -> DNA/ops/DECISION_LOG.md
 
-Last updated: 2026-03-16
+Last updated: 2026-03-19
 
 ---
 
-## AI Orchestration
+## AI Operating Model
 
-### Orchestrator Tier (plan, spec, review, approve)
+### Daily Drivers
 | Tool | Role |
 |------|------|
-| Claude Code | Primary orchestrator — planning, spec, review |
-| Codex CLI | Execution-phase agent — batch prompts |
-| Jules | GitHub PR execution (Google AI) |
+| Codex CLI | Primary workspace agent for overview, planning, review, and execution inside the canonical workspace. |
+| Claude (browser/chat) | Human-in-the-loop advisor for planning, writing, and review, usually against `workspace_full` or pasted context. Not a required local wrapper. |
 
-### Worker Tier (grunt execution — interchangeable by cost/task)
-Orchestrators plan and review. Workers execute. Never pay premium rates for grunt work.
+### Capability-Specific
+| Tool | Role |
+|------|------|
+| Claude Code | Terminal-native deep refactors, review, or second-opinion execution when explicitly chosen. |
+| Gemini CLI / Vertex AI | Google-stack tasks, `evolution-engine`, and ADC-first workflows. |
 
+### Utility / Optional
 | Tool | Notes |
 |------|-------|
-| Groq | Fast free-tier — llama/mixtral models |
-| OpenRouter | Free-tier multi-model routing |
-| Kilo | Low-cost execution |
-| Gemini API | Google-stack tasks, free tier |
+| Aider | Diff-first editing workflow when it is the best fit. |
+| OpenRouter / Groq APIs | Low-cost utility inference, not the default daily agent surface. |
+| Jules | Future GitHub-native async PR automation path; keep optional, not a daily driver. |
 
-This pattern is not Claude-locked. Any capable orchestrator can run it.
+### Retired From Live Wrapper Surface
+| Tool | Status |
+|------|--------|
+| Kimi CLI | Retired from the live workspace wrapper surface. Historical references remain in `DECISION_LOG.md`. |
+| Kilo | Retired from the live workspace wrapper surface. Historical references remain in `DECISION_LOG.md`. |
+
+The DNA file chain remains model-agnostic. The preferred workflow above reflects
+current operator practice, not a hard lock on future experimentation.
 
 ---
 

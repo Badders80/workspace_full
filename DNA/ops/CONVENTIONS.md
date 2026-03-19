@@ -47,7 +47,33 @@
 - `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-16_correction-rulebook.md`
 - `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_batch.md`
 - `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_picoclaw.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_baudbot.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_promptfoo.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_gistssh.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_pi-dev.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-17_opencode.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_batch.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_nemotron-super.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_march-14-15-review.md`
+- `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_priority-shortlist.md`
 - `/home/evo/workspace/DNA/ops/TRANSITION.md`
+- `/home/evo/workspace/_sandbox/research_vault/README.md`
+- `/home/evo/workspace/_sandbox/research_vault/HOME.md`
+- `/home/evo/workspace/_sandbox/research_vault/OBSIDIAN_SETUP.md`
+- `/home/evo/workspace/_sandbox/research_vault/SCHEMA.md`
+- `/home/evo/workspace/_sandbox/research_vault/00_Inbox/Capture Inbox.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/tokinvest_capital/last-6-months.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/evolutionstables_website/last-6-months.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/tokinvest_cap_x/source-profile.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/evolutionstable_x/source-profile.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/alex-baddeley_linkedin/source-profile.md`
+- `/home/evo/workspace/_sandbox/research_vault/01_Sources/evolution_linkedin_admin/source-profile.md`
+- `/home/evo/workspace/_sandbox/research_vault/04_Reviews/Review Queue.md`
+- `/home/evo/workspace/_sandbox/research_vault/05_Reports/CEO Report - Latest.md`
+- `/home/evo/workspace/_sandbox/research_vault/05_Reports/CTO Report - Latest.md`
+- `/home/evo/workspace/_sandbox/research_vault/_templates/Manual Capture.md`
+- `/home/evo/workspace/_sandbox/research_vault/_templates/Normalized Note.md`
+- `/home/evo/workspace/_sandbox/research_vault/_templates/Review Report.md`
 - `/home/evo/workspace/projects/Evolution_Content/assets/library/README.md`
 - `/home/evo/workspace/_docs/MERGE_PLAN_2026-03-10.md`
 - `/home/evo/workspace/_docs/SITE_WIDE_ALIGNMENT_AUDIT_2026-03-12.md`
@@ -58,12 +84,12 @@
 
 ## Archive Convention
 
-- All archive batches live under `/home/evo/workspace/_archive/<stream>/<YYYY-MM-DD>/`
+- All archive batches live under `/home/evo/_archive/<stream>/<YYYY-MM-DD>/` (OUTSIDE workspace root — never inside /home/evo/workspace/)
 - Every dated snapshot must contain a `MANIFEST.md` before the batch is considered closed.
 - `MANIFEST.md` must list: contents by folder, notable files with one-line descriptions, and reason for archiving.
-- Search pattern: `rg -n "<term>" /home/evo/workspace/_archive/*/MANIFEST.md`
+- Search pattern: `rg -n "<term>" /home/evo/_archive/*/MANIFEST.md`
 - Internal archive (still relevant to active repo): keep inside the workspace archive stream until reactivation.
-- External archive (retired from active repo): move to `/home/evo/workspace/_archive/`.
+- External archive (retired from active repo): move to `/home/evo/_archive/` (outside workspace root).
 - Second-pass rule: after a build stabilises, promote internal archives to external.
 
 ## Operational Sync: Google Docs Context (Retired)
@@ -106,3 +132,27 @@ Operational commands:
 → overrides by: none
 → live map: /home/evo/workspace/AI_SESSION_BOOTSTRAP.md
 → conventions: /home/evo/workspace/DNA/ops/CONVENTIONS.md
+
+## Tech Radar & Skills — Human-in-the-Loop Rule
+
+Agents may research, assess, and propose updates to `TECH_RADAR.md` and `DNA/skills/`.
+Agents may NEVER autonomously promote a tool to `Adopt` or install a skill to `~/.codex/skills/`.
+
+The human pulls the trigger on all promotions. Agents propose, humans decide.
+
+Workflow:
+- Agent research → outputs a proposed radar entry or skill candidate
+- Human reviews → approves or rejects
+- Human executes → updates TECH_RADAR.md and deploys skill if approved
+
+## Tech Radar & Skills — Human-in-the-Loop Rule
+
+Agents may research, assess, and propose updates to TECH_RADAR.md and DNA/skills/.
+Agents may NEVER autonomously promote a tool to Adopt or install a skill to ~/.codex/skills/.
+
+The human pulls the trigger on all promotions. Agents propose, humans decide.
+
+Workflow:
+- Agent research outputs a proposed radar entry or skill candidate
+- Human reviews and approves or rejects
+- Human executes and updates TECH_RADAR.md and deploys skill if approved

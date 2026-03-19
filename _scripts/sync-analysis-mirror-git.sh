@@ -147,6 +147,9 @@ is_allowed_file() {
     .env.example|.env.sample|.env.template)
       return 0
       ;;
+    env.schema|env.template)
+      return 0
+      ;;
   esac
 
   case "$rel_lower" in
@@ -193,6 +196,22 @@ collect_tree_files() {
   return 0
 }
 
+is_known_sample_secret_file() {
+  local rel="$1"
+
+  case "$rel" in
+    gateways/hermes-agent/repo/agent/redact.py|\
+    gateways/hermes-agent/repo/tests/agent/test_redact.py|\
+    gateways/hermes-agent/repo/tests/tools/test_mcp_tool.py|\
+    gateways/hermes-agent/repo/tests/tools/test_skills_guard.py|\
+    gateways/hermes-agent/repo/skills/mcp/native-mcp/SKILL.md)
+      return 0
+      ;;
+  esac
+
+  return 1
+}
+
 build_export_manifest() {
   local export_root="$1"
   local source_root="$2"
@@ -234,9 +253,12 @@ EOF
 
 scan_for_potential_secrets() {
   local export_root="$1"
-  local file findings=0 line
+  local file findings=0 line rel
 
   while IFS= read -r -d '' file; do
+    rel="${file#${export_root}/}"
+    is_known_sample_secret_file "$rel" && continue
+
     while IFS= read -r line; do
       case "${line,,}" in
         *replace-with*|*your-*|*example*|*sample*|*template*|*placeholder*)
@@ -250,7 +272,7 @@ scan_for_potential_secrets() {
          [[ "$line" =~ sk-[A-Za-z0-9]{20,} ]] || \
          [[ "$line" =~ AIza[0-9A-Za-z_-]{20,} ]] || \
          [[ "$line" =~ -----BEGIN[[:space:]][A-Z[:space:]]+PRIVATE[[:space:]]KEY----- ]]; then
-        log "Potential secret detected in export: ${file#${export_root}/}"
+        log "Potential secret detected in export: ${rel}"
         findings=$((findings + 1))
         break
       fi

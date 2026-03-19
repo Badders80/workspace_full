@@ -4,7 +4,9 @@
 # Prevents accidents like committing .env files
 # ═══════════════════════════════════════════════════════════
 
-EVO_ROOT="/home/evo"
+CONTROL_ROOT="/home/evo"
+WORKSPACE_ROOT="$CONTROL_ROOT/workspace"
+PROJECT_ROOT="$WORKSPACE_ROOT/projects"
 
 echo "🔧 Installing Git Hooks"
 echo "═══════════════════════════════════════════════════════════"
@@ -74,7 +76,7 @@ if [[ $VIOLATIONS -gt 0 ]]; then
     echo "Better alternatives:"
     echo "  1. Add to .gitignore if they shouldn't be tracked"
     echo "  2. Use .env.example templates for config"
-    echo "  3. Store secrets in /evo/.env (central vault)"
+    echo "  3. Store secrets in /home/evo/.env (central vault)"
     exit 1
 fi
 
@@ -101,14 +103,14 @@ HOOK
     
     chmod +x "$repo_path/.git/hooks/pre-commit"
     
-    # Create post-commit hook for DNA sync reminder
-    if [[ "$repo_name" == "00_DNA" ]]; then
+    # Create post-commit hook for the live workspace governance repo
+    if [[ "$repo_path" == "$WORKSPACE_ROOT" ]]; then
         cat > "$repo_path/.git/hooks/post-commit" << 'HOOK'
 #!/bin/bash
-# Post-commit hook for DNA
+# Post-commit hook for workspace governance
 # Reminds to push changes so memory is backed up
 
-echo "🧠 DNA commit complete!"
+echo "Workspace governance commit complete!"
 echo "   Don't forget to push: git push origin main"
 HOOK
         chmod +x "$repo_path/.git/hooks/post-commit"
@@ -117,14 +119,14 @@ HOOK
     echo "  ✅ Pre-commit hook installed"
 }
 
-# Install for DNA
+# Install for workspace governance repo
 echo ""
-install_hooks "$EVO_ROOT/00_DNA"
+install_hooks "$WORKSPACE_ROOT"
 
 # Install for each project with a .git folder
 echo ""
 echo "Scanning projects..."
-for proj in "$EVO_ROOT"/projects/*/; do
+for proj in "$PROJECT_ROOT"/*/; do
     if [[ -d "$proj/.git" ]]; then
         install_hooks "$proj"
     fi

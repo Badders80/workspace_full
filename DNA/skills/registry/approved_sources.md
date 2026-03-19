@@ -42,15 +42,12 @@ Treat this as a **review request**, not an install instruction.
 - Do not adopt directly from a star.
 - New stars enter `Assess` first unless already equivalent to an adopted tool.
 
-### 5) Star Sync
-- Run: `node scripts/sync_starred_repos.mjs`
-- Registry outputs:
-  - `skills/registry/starred_repo_registry.json` (canonical, editable for statuses/notes)
-  - `skills/registry/starred_repo_registry.md` (human-readable snapshot)
-- Script behavior:
-  - Pulls GitHub stars for `Badders80` (override with `GITHUB_STARS_USER`)
-  - Adds unseen repos as `Assess`
-  - Preserves manual status/category/notes for existing repos
+### 5) Star Registry
+- Current active surface: `skills/registry/starred_repo_registry.md`
+- The old sync script and JSON registry were retired from the live workspace
+  surface during cleanup because they no longer existed as real files.
+- If star sync is reintroduced later, document the script path and all output
+  files here before treating it as active automation again.
 
 ---
 

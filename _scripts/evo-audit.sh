@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 # =============================================================================
-# evo-audit.sh — Holistic /home/evo Workspace Audit
+# evo-audit.sh — Holistic Evolution Workspace Audit
 # Evolution Stables | Run in tmux or terminal
-# Usage: bash /home/evo/_scripts/evo-audit.sh
+# Usage: bash /home/evo/workspace/_scripts/evo-audit.sh
 # =============================================================================
 # NOTE: No set -e so errors are logged and we continue through all phases
 
 EVO_HOME="/home/evo"
+WORKSPACE_ROOT="/home/evo/workspace"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-AUDIT_DIR="$EVO_HOME/_logs/audit_runs/$TIMESTAMP"
+AUDIT_DIR="$WORKSPACE_ROOT/_logs/audit_runs/$TIMESTAMP"
 RAW_DIR="$AUDIT_DIR/raw"
-REPORT="$EVO_HOME/_docs/HOLISTIC_EVO_AUDIT_${TIMESTAMP}.md"
+REPORT="$WORKSPACE_ROOT/_docs/HOLISTIC_EVO_AUDIT_${TIMESTAMP}.md"
 PROGRESS="$AUDIT_DIR/progress.log"
 FINDINGS="$AUDIT_DIR/findings.tsv"
 
-mkdir -p "$RAW_DIR" "$EVO_HOME/_docs"
+mkdir -p "$RAW_DIR" "$WORKSPACE_ROOT/_docs"
 echo -e "SEVERITY\tCATEGORY\tFINDING\tDETAIL" > "$FINDINGS"
 
 log()      { echo "[$(date '+%H:%M:%S')] $*" | tee -a "$PROGRESS"; }
@@ -28,7 +29,7 @@ code() { echo -e "\`\`\`\n$1\n\`\`\`" >> "$REPORT"; }
 
 # ── Init report ───────────────────────────────────────────────────────────────
 cat > "$REPORT" <<EOF
-# Holistic /home/evo Workspace Audit
+# Holistic Evolution Workspace Audit
 **Generated:** $(date '+%A %d %B %Y %H:%M:%S')
 **Run ID:** $TIMESTAMP
 
@@ -104,22 +105,21 @@ fi
 done_chk 2
 
 # =============================================================================
-# PHASE 3 — Missing referenced paths in scripts/docs
+# PHASE 3 — Missing referenced paths in active workspace docs/scripts
 # =============================================================================
-log "Phase 3 — Dead path references"
-H "Phase 3 — Dead Path References in Scripts & Docs"
+log "Phase 3 — Dead workspace path references"
+H "Phase 3 — Dead Path References in Active Workspace Docs & Scripts"
 
 OUT="$RAW_DIR/p3_dead_refs.txt"
 SCAN_FILES=()
 for f in \
-  "$EVO_HOME/_scripts" \
-  "$EVO_HOME/00_DNA/scripts" \
-  "$EVO_HOME/Justfile" \
-  "$EVO_HOME/QUICKSTART.md" \
-  "$EVO_HOME/PROJECTS_INDEX.md" \
-  "$EVO_HOME/SERVICE_INVENTORY.md" \
-  "$EVO_HOME/.bashrc" \
-  "$EVO_HOME/.bash_profile"; do
+  "$WORKSPACE_ROOT/_scripts" \
+  "$WORKSPACE_ROOT/DNA" \
+  "$WORKSPACE_ROOT/Justfile" \
+  "$WORKSPACE_ROOT/CONTEXT.md" \
+  "$WORKSPACE_ROOT/AI_SESSION_BOOTSTRAP.md" \
+  "$WORKSPACE_ROOT/AGENTS.md" \
+  "$WORKSPACE_ROOT/MANIFEST.md"; do
   [ -e "$f" ] && SCAN_FILES+=("$f")
 done
 
@@ -187,17 +187,17 @@ done
 done_chk 4
 
 # =============================================================================
-# PHASE 5 — /00_DNA integrity
+# PHASE 5 — workspace DNA integrity
 # =============================================================================
-log "Phase 5 — 00_DNA check"
-H "Phase 5 — /00_DNA Structure & Integrity"
+log "Phase 5 — workspace DNA check"
+H "Phase 5 — /workspace DNA Structure & Integrity"
 
-DNA="$EVO_HOME/00_DNA"
+DNA="$WORKSPACE_ROOT/DNA"
 OUT="$RAW_DIR/p5_dna.txt"
 
 if [ ! -d "$DNA" ]; then
-  body "❌ /00_DNA does not exist!"
-  finding "CRITICAL" "00_DNA" "/00_DNA missing" ""
+  body "❌ /workspace DNA does not exist!"
+  finding "CRITICAL" "Workspace DNA" "/workspace DNA missing" ""
 else
   {
     echo "=== Tree (3 levels) ==="
@@ -205,14 +205,21 @@ else
 
     echo ""
     echo "=== Key file check ==="
-    for f in "OPERATING_BACKLOG.md" "DECISION_LOG.md" "TECH_RADAR.md" "INBOX.md"; do
+    for f in \
+      "AGENTS.md" \
+      "agents/AI_CONTEXT.md" \
+      "ops/CONVENTIONS.md" \
+      "ops/STACK.md" \
+      "ops/TRANSITION.md" \
+      "ops/DECISION_LOG.md" \
+      "INBOX.md"; do
       full="$DNA/$f"
       if [ -e "$full" ]; then
         lines=$(wc -l < "$full" 2>/dev/null || echo "?")
         echo "  ✅ $f ($lines lines)"
       else
         echo "  ❌ MISSING: $f"
-        finding "MEDIUM" "00_DNA" "Missing: $f" "$DNA/$f"
+        finding "MEDIUM" "Workspace DNA" "Missing: $f" "$DNA/$f"
       fi
     done
 
@@ -231,17 +238,17 @@ fi
 done_chk 5
 
 # =============================================================================
-# PHASE 6 — /projects inventory
+# PHASE 6 — workspace projects inventory
 # =============================================================================
-log "Phase 6 — Projects"
-H "Phase 6 — /projects Inventory"
+log "Phase 6 — Workspace projects"
+H "Phase 6 — /workspace/projects Inventory"
 
-PROJ="$EVO_HOME/projects"
+PROJ="$WORKSPACE_ROOT/projects"
 OUT="$RAW_DIR/p6_projects.txt"
 
 if [ ! -d "$PROJ" ]; then
-  body "❌ /projects missing!"
-  finding "CRITICAL" "Projects" "/projects missing" ""
+  body "❌ /workspace/projects missing!"
+  finding "CRITICAL" "Projects" "/workspace/projects missing" ""
 else
   {
     echo "=== Projects listing ==="
@@ -334,7 +341,7 @@ OUT="$RAW_DIR/p8_duplication.txt"
 
   echo ""
   echo "=== Root dirs duplicating /projects names ==="
-  for p in "$EVO_HOME"/projects/*/; do
+  for p in "$WORKSPACE_ROOT"/projects/*/; do
     name=$(basename "$p")
     [ -d "$EVO_HOME/$name" ] && echo "  ⚠️  $name at BOTH /projects/ and /home/evo/"
   done
@@ -368,7 +375,7 @@ OUT="$RAW_DIR/p9_shell.txt"
 
   echo ""
   echo "=== Justfile targets ==="
-  [ -f "$EVO_HOME/Justfile" ] && grep -E '^[a-z][a-z_-]+:' "$EVO_HOME/Justfile" | cut -d: -f1 | sort || echo "No Justfile"
+  [ -f "$WORKSPACE_ROOT/Justfile" ] && grep -E '^[a-z][a-z_-]+:' "$WORKSPACE_ROOT/Justfile" | cut -d: -f1 | sort || echo "No Justfile"
 
   echo ""
   echo "=== Docker containers ==="
@@ -452,7 +459,7 @@ OUT="$RAW_DIR/p11_env.txt"
 
   echo ""
   echo "=== Per-project .env key counts ==="
-  for p in "$EVO_HOME"/projects/*/; do
+  for p in "$WORKSPACE_ROOT"/projects/*/; do
     [ -d "$p" ] || continue
     name=$(basename "$p")
     if [ -f "$p/.env" ]; then

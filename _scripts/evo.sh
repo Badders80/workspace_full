@@ -12,6 +12,10 @@ Usage: evo [command]
 Commands:
   doctor        Run workspace sanity checks
   context       Show canonical workspace context files
+  gemini        Launch Gemini with workspace context
+  claude        Launch Claude with workspace context
+  aider         Launch Aider with workspace context
+  codex         Launch Codex
   backlog       Show the active inbox/deferred queue
   transition    Show the transition log
   decisions     Show the decision log
@@ -70,6 +74,22 @@ case "${1:-help}" in
     ;;
   context)
     cmd_context
+    ;;
+  gemini)
+    shift
+    exec /home/evo/workspace/_scripts/geminic.sh "$@"
+    ;;
+  claude)
+    shift
+    exec /home/evo/workspace/_scripts/claudec.sh "$@"
+    ;;
+  aider)
+    shift
+    exec /home/evo/workspace/_scripts/aidere.sh "$@"
+    ;;
+  codex)
+    shift
+    exec bash /home/evo/workspace/_scripts/codexc.sh "$@"
     ;;
   backlog)
     cmd_backlog

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DATE_TAG="${1:-$(date +%F)-groq-watchdog}"
-TARGET_ROOT="${TARGET_ROOT:-/home/evo/projects/SSOT_Build}"
+TARGET_ROOT="${TARGET_ROOT:-/home/evo/workspace/projects/SSOT_Build}"
 PROMPT_FILE="/tmp/agent_audit_prompt.txt"
 BACKUP_PROMPT="/tmp/agent_audit_prompt.backup.$$"
 
@@ -69,12 +69,9 @@ set -a
 source /home/evo/.env >/dev/null 2>&1 || true
 set +a
 
-KIMI_AUDIT_ENABLED=0 \
 GEMINI_AUDIT_ENABLED=0 \
-GLM_AUDIT_ENABLED=0 \
 ANTHROPIC_AUDIT_ENABLED=0 \
 CODEX_AUDIT_ENABLED=0 \
 GROQ_AUDIT_ENABLED=1 \
 GROQ_AUDIT_PROFILE=watchdog \
-/home/evo/_scripts/evo-audit-partners.sh --date="${DATE_TAG}"
-
+/home/evo/workspace/_scripts/evo-audit-partners.sh --date="${DATE_TAG}"

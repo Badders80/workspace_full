@@ -18,6 +18,120 @@
 
 ---
 
+## 2026-03-19: Slim Live Agent Surface And Reaffirm Central Vault
+
+### Decision
+Treat `/home/evo/workspace` as the only live agent surface, keep
+`/home/evo/.env` as the single shared vault, and reduce the active agent stack
+to the tools that match current real usage.
+
+### Context
+- The workspace had active prompt and skill surfaces still pointing at
+  `/home/evo/00_DNA` and `/home/evo/projects`, which created false context for
+  external agents.
+- `just check` was failing because the central-vault contract already existed,
+  but two active projects were not linked to `/home/evo/.env`.
+- The live wrapper and stack surface had grown wider than actual operator
+  practice, especially around Kimi and Kilo.
+
+### Decision Details
+- The only canonical build root is `/home/evo/workspace`.
+- `/home/evo/.env` remains the one shared vault. Active projects should link to
+  it instead of keeping parallel per-project truth copies.
+- The preferred live workflow is:
+  - Codex CLI as the primary workspace agent
+  - Claude browser/chat as the advisory review and planning partner
+  - Claude Code and Gemini as capability-specific paths
+  - Aider, OpenRouter or Groq APIs, and Jules as optional utility paths
+- Kimi CLI and Kilo are retired from the live workspace wrapper surface.
+- The prompt library and skills index must only describe files and paths that
+  actually exist.
+
+### Impact
+- Fewer false outputs from stale prompts and ghost skills
+- A truthful central-vault contract that can be rotated once and consumed
+  everywhere
+- Lower governance drag in the live stack while keeping the DNA chain
+  model-agnostic
+
+### Related Files
+- `DNA/system-prompts/PROMPT_LIBRARY.md`
+- `DNA/skills/INDEX.md`
+- `DNA/ops/STACK.md`
+- `_scripts/evo-doctor.sh`
+- `_scripts/vault.sh`
+- `DNA/ops/TRANSITION.md`
+
+---
+
+## 2026-03-19: Archive Evolution_Marketplace Out Of The Active Workspace Surface
+
+### Decision
+Archive `Evolution_Marketplace` out of `/home/evo/workspace/projects` and remove it from all live active-project truth surfaces.
+
+### Context
+- The operator marked `Evolution_Marketplace` as low-value for the current build phase and requested removal from the active workspace surface.
+- Workspace governance prefers archive-first cleanup when stale or duplicate surfaces add drag.
+- Keeping Marketplace listed as active in bootstrap and agent context files would create false planning signals for future sessions.
+
+### Decision Details
+- Move `projects/Evolution_Marketplace` to `/home/evo/_archive/projects/2026-03-19/Evolution_Marketplace`.
+- Add an archive manifest for the dated batch.
+- Remove Marketplace from active-project lists in:
+  - `AI_SESSION_BOOTSTRAP.md`
+  - `AGENTS.md`
+  - `DNA/agents/AI_CONTEXT.md`
+  - `MANIFEST.md`
+- Track reactivation as explicit only via `DNA/INBOX.md`.
+
+### Impact
+- The active project surface is smaller and better aligned with current execution priorities.
+- Future agents no longer treat Marketplace as an active maintenance target.
+- The project remains recoverable from a dated archive path instead of hard deletion.
+
+### Related Files
+- `AI_SESSION_BOOTSTRAP.md`
+- `AGENTS.md`
+- `DNA/agents/AI_CONTEXT.md`
+- `DNA/INBOX.md`
+- `DNA/ops/TRANSITION.md`
+- `MANIFEST.md`
+
+---
+
+## 2026-03-19: Reduce First-Level Partner Audits To Core Stack Paths
+
+### Decision
+Reduce `_scripts/evo-audit-partners.sh` to the core first-level partner set that matches the live stack model: `Codex`, `Gemini`, `Groq`, and `Anthropic`.
+
+### Context
+- The prior runner still treated `Kimi` and `GLM` as active first-level partners, even though those paths were already retired from the live wrapper surface.
+- The previous script also mixed legacy `/home/evo` report paths and context-chain references that no longer matched workspace-first governance.
+- Operator backlog explicitly queued a reducer pass to align partner auditing with the current preferred stack.
+
+### Decision Details
+- Remove `Kimi` and `GLM` first-level audit execution and their route checks from `_scripts/evo-audit-partners.sh`.
+- Keep first-level audits focused on:
+  - `Codex`
+  - `Gemini`
+  - `Groq`
+  - `Anthropic`
+- Write audit artifacts under `/home/evo/workspace/_logs/audit_runs`.
+- Use workspace-native context-chain references in generated reports.
+
+### Impact
+- Lower audit runner complexity and fewer stale route failures.
+- First-level partner outputs now mirror the actual live operating model.
+- Remaining wrappers can now be updated against one clear core partner contract.
+
+### Related Files
+- `_scripts/evo-audit-partners.sh`
+- `DNA/INBOX.md`
+- `DNA/ops/TRANSITION.md`
+- `DNA/ops/STACK.md`
+
+---
+
 ## 2026-03-16: STACK.md Authority Model + Drive Sync Removal
 
 ### Decision
@@ -1301,3 +1415,38 @@ After separating horse identity truth from current HLT associations, the next pr
 - `projects/SSOT_Build/docs/contracts/CURRENT_DATA_CONTRACT_2026-03-13.md`
 - `projects/SSOT_Build/docs/contracts/FIRESTORE_WRITE_MAP_2026-03-13.md`
 - `projects/SSOT_Build/README.md`
+
+---
+
+## 2026-03-17: Keep Analysis Mirror And Broad Workspace Snapshot As Separate GitHub Surfaces
+
+### Decision
+Keep `Badders80/workspace` as the curated analysis mirror and use `Badders80/workspace_full` as the broadest practical GitHub-safe workspace snapshot.
+
+### Context
+The curated mirror already has a documented purpose: a text-first operating surface for cloud analysis. A different need emerged for agent tooling such as Jules, where withholding too much of the live workspace could hide the actual cause of a problem. At the same time, a literal raw filesystem push is still unsafe because the workspace contains nested repositories, secret-shaped files, media assets, and binaries that can exceed GitHub's hard file-size limit.
+
+### Decision Details
+**Implementation:**
+- Preserve the existing curated mirror workflow in `_scripts/sync-analysis-mirror-git.sh`.
+- Add a separate broad snapshot workflow in `_scripts/sync-workspace-full-git.sh`.
+- Exclude from the broad snapshot:
+  - nested `.git/` directories
+  - local env, keys, certs, and credential-shaped files
+  - media assets such as `mp3`, `mp4`, `jpg`, `jpeg`, `png`, `gif`, `webp`, `svg`, `mov`, and `wav`
+  - files above the configured GitHub-safe size threshold
+- Allow the broad snapshot to include dependency installs and generated code when they fit, because the immediate goal is investigation rather than long-term repo hygiene.
+
+**Rejected Alternatives:**
+- Reject: Reuse `Badders80/workspace` for the broad snapshot. That would erase the current repo contract and make the existing mirror workflow misleading.
+- Reject: Push the raw live workspace root directly with no exclusions. That is too likely to fail on nested repo metadata, secrets, or GitHub file limits.
+
+### Impact
+- Two explicit repo surfaces now exist for different AI/agent use cases.
+- The broad snapshot reduces the chance that missing local context becomes a hidden blocker during remote investigation.
+- The curated mirror remains smaller and more stable for code-and-doc analysis workflows.
+
+### Related Files
+- `/home/evo/workspace/_scripts/sync-analysis-mirror-git.sh`
+- `/home/evo/workspace/_scripts/sync-workspace-full-git.sh`
+- `/home/evo/workspace/Justfile`

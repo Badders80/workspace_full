@@ -217,6 +217,132 @@ Append-only merge and workspace-consolidation handoff log for the `/home/evo/wor
 - Blocked: The upstream repo explicitly warns that the project is still early and not suitable for production use before `v1.0`, so it is not ready for a serious integration path.
 - Decisions: Treat `PicoClaw` as a worker-runtime research item rather than an `OpenClaw` replacement, which preserves current stack-governance boundaries.
 
+### 2026-03-17 [agent: Codex][workspace-full-snapshot-flow]
+
+### 2026-03-19 [agent: Codex][evolution-platform-seo-audit]
+- Done: Completed a live SEO audit of `projects/Evolution_Platform` against `https://www.evolutionstables.nz`, compared production crawl/index signals to the local Next.js metadata surfaces, and verified the biggest drift areas: canonical host mismatch, sitemap/robots mismatch, indexable private/demo/auth surfaces, placeholder legal pages, broken or missing updates routes, and poor homepage mobile LCP driven by heavyweight media payloads.
+- Next: Decide whether to execute a production-alignment fix pass now, starting with `robots.txt` + sitemap parity, private-route `noindex` enforcement, legal-page replacement, and homepage image/LCP reduction.
+- Blocked: Search Console and analytics were not available in this session, so index coverage, query performance, and cannibalization could only be inferred from live crawlable output and Lighthouse.
+- Decisions: For SEO work on `Evolution_Platform`, treat live production output as the source of truth until deployment parity is re-established, because the current repo metadata and crawl directives do not match what the public site is serving.
+- Done: Created `/home/evo/workspace/_scripts/sync-workspace-full-git.sh` as a repeatable broad snapshot export for `workspace_full`, added `just workspace-full` and `just workspace-full-apply`, and set the default exclusions to nested `.git/` directories, secret-shaped files, media assets (`mp3/mp4/jpg/jpeg/png/gif/webp/svg/mov/wav`), and files above the GitHub-safe size threshold.
+- Next: Re-run the workspace-full script whenever a fresh broad agent-facing snapshot is needed, and only widen the exclusions if GitHub rejects a new class of file or the repo becomes too heavy for the intended investigation workflow.
+- Blocked: The broad snapshot still intentionally keeps local installs and generated code when they fit, so repo weight can grow quickly even with media and oversized files excluded.
+- Decisions: Keep `Badders80/workspace` as the curated analysis mirror and use `Badders80/workspace_full` for the widest practical GitHub-safe workspace export.
+
+### 2026-03-17 [agent: Codex][tech-radar-baudbot-promptfoo-pi-gists-opencode]
+- Done: Added focused intake files for `BaudBot`, `promptfoo`, `gists.sh`, `Pi (pi.dev)`, and `OpenCode`; updated `TECH_RADAR.md` to mark `BaudBot` as `ASSESS`, `promptfoo`/`gists.sh`/`Pi` as `TRIAL`, and reopened `OpenCode` from `ARCHIVE` to a bounded `TRIAL`; registered the new markdown files in conventions; and appended the related trial tasks to `DNA/INBOX.md`.
+- Next: Run the low-risk trials first, especially `promptfoo`, `gists.sh`, and one bounded terminal-agent comparison between `Pi`, `OpenCode`, and the current Codex path.
+- Blocked: Some of these tools were added from user-supplied fit assessments rather than a fresh full-source validation pass in this session, so the radar entries should still be treated as working notes until a real hands-on trial happens.
+- Decisions: Reopening `OpenCode` in `TECH_RADAR.md` is a trial-scope revisit only and does not change the adopted stack in `STACK.md`.
+
+### 2026-03-17 [agent: Codex][workspace-root-cleanup]
+- Done: Copied the archive vault template/schema into `workspace/DNA/vault`, pointed `vault.sh` at the workspace project tree while still validating master `/home/evo/.env`, and rewired `evo-docker.sh`/`evo-doctor.sh` to derive their paths from `WORKSPACE_ROOT` instead of hard-coded `/home/evo` references.
+- Next: Keep the workspace vault schema/template in sync with any future env contract changes and let `vault.sh check` surface unexpected symlink targets as it walks the workspace projects.
+- Blocked: None.
+- Decisions: Treat `/home/evo/workspace` as the canonical repo surface and reserve `workspace_full` for the broad snapshot export per the March 17 decision log.
+
+### 2026-03-17 [agent: Codex][google-auth-policy-realign]
+- Done: Realigned the live Gemini control-plane settings back to `vertex-ai` in both `/home/evo/.config/evo/gemini-system-settings.json` and `/home/evo/.gemini/settings.json`, and removed default `GEMINI_API_KEY` / `GOOGLE_API_KEY` shell export from `/home/evo/.config/evo/auth.direct.sh` so Google tooling now follows the workspace ADC-first policy by default.
+- Next: Keep the raw Gemini Developer API key in `/home/evo/.env` only as a diagnostics or explicit fallback secret until the secret-registry pass decides whether it should be retired entirely.
+- Blocked: None.
+- Decisions: For this workspace, Google API keys may exist in vault storage but must not be injected into every shell by default; the standard operating path is Vertex AI on `evolution-engine` via ADC.
+
+### 2026-03-17 [agent: Codex][workspace-full-secret-exclusions]
+- Done: Investigated the blocked `workspace_full` push, confirmed the secret scan correctly flagged a vault archive backup and an OpenClaw runtime workspace token file, and updated `/home/evo/workspace/_scripts/sync-workspace-full-git.sh` to exclude `DNA/vault/archive/` plus `gateways/openclaw/workspace/workspace-gateway-*/` from the broad export.
+- Next: Re-run `just workspace-full-apply` after the export cache refreshes so the excluded runtime and vault surfaces are deleted from the cached mirror before commit.
+- Blocked: The previously interrupted export repo may still contain stale copies of those files until the next successful sync completes.
+- Decisions: `workspace_full` remains broad, but it must not include vault backup material or runtime gateway workspaces that can carry live auth tokens.
+
+### 2026-03-17 [agent: Codex][skills-integration-strategy]
+- Done: Reviewed the required workspace governance chain, checked the governed `DNA/skills` surface plus the live stack/radar, inspected current project-local agent surfaces in `Evolution_Platform` and `SSOT_Build`, and assessed the proposed external skill and MCP candidates against the current build direction.
+- Next: If approved, formalize a small workspace-first skills operating model: `DNA/skills` as the governed catalog, project-local overlays only where repo-specific behavior exists, and a first-wave trial pack documented before any runtime installs.
+- Blocked: Human approval is still required before promoting any candidate beyond `TRIAL` or installing anything into `~/.codex/skills/`.
+- Decisions: Recommendation only for now - keep skill governance at the workspace level and use project-level skill overlays selectively for repo-specific build behavior.
+
+### 2026-03-19 [agent: Codex][workspace-truth-surface-slimming]
+- Done: Rewrote the live prompt library to the workspace-only model, corrected the lingering `00_DNA` skill path in `DNA/agents/AGENTS.core.md`, fixed `Justfile` so `dna-commit` targets the real workspace git root, rewired `evo-audit.sh` to inspect workspace DNA and workspace projects instead of `00_DNA`, trimmed the live doctor wrapper list, simplified the governed skills index so it only lists files that actually exist, and updated the live stack plus decision log to match the current operating model.
+- Next: Validate whether `evo-audit-partners.sh` should be reduced to the preferred core set, and decide whether to clean the retired Kimi and Kilo wrappers from the control-plane install paths under `~/.local/bin`.
+- Blocked: Historical references to Kimi, Kilo, `00_DNA`, and older path models remain in `DECISION_LOG.md` by design; they are ledger entries, not live rules.
+- Decisions: `/home/evo/.env` remains the single shared vault for active projects; the live preferred agent flow is Codex primary, Claude browser/chat advisory, Claude Code and Gemini capability-specific, with Aider plus OpenRouter or Groq APIs and Jules as optional utility paths.
+
+### 2026-03-19 [agent: Codex][marketplace-archive-retire]
+- Done: Moved `projects/Evolution_Marketplace` out of the active workspace surface to `/home/evo/_archive/projects/2026-03-19/Evolution_Marketplace`, updated bootstrap and agent context docs to remove Marketplace from active-project lists, and updated inbox/manifest surfaces to track the archive state.
+- Next: Reduce `evo-audit-partners.sh` to the preferred core set and retire partner routes that no longer match the live stack.
+- Blocked: None.
+- Decisions: `Evolution_Marketplace` is no longer an active project surface under `/home/evo/workspace/projects`; reactivation requires explicit re-scope from the dated archive batch.
+
+### 2026-03-19 [agent: Codex][audit-partners-core-reducer]
+- Done: Rewrote `_scripts/evo-audit-partners.sh` to the preferred core first-level auditors (`Codex`, `Gemini`, `Groq`, `Anthropic`), removed `Kimi` and `GLM` routing complexity, switched audit output to `/home/evo/workspace/_logs/audit_runs`, and updated report context-chain links to workspace-native governance paths.
+- Next: Align `_scripts/evo-audit-claude-meta.sh` and `_scripts/evo-groq-watchdog.sh` with the same reduced core model and workspace-native output assumptions.
+- Blocked: None.
+- Decisions: The first-level partner audit surface now matches the current live stack strategy; retired partner routes should be treated as historical only.
+
+### 2026-03-19 [agent: Codex][audit-wrapper-alignment-complete]
+- Done: Updated `_scripts/evo-groq-watchdog.sh` to remove stale `KIMI_AUDIT_ENABLED` and `GLM_AUDIT_ENABLED` toggles, updated `_scripts/evo-audit-claude-meta.sh` to use the reduced core first-level partner reports (`Gemini`, `Groq`, `Anthropic`, `Codex`) and workspace-native context-chain paths, and verified with `bash -n _scripts/evo-audit-partners.sh _scripts/evo-audit-claude-meta.sh _scripts/evo-groq-watchdog.sh` plus `just check`.
+- Next: Optional cleanup pass to archive or simplify any remaining legacy direct audit helpers that are no longer called by active workflows.
+- Blocked: None.
+- Decisions: Audit orchestration wrappers now align with the reduced core partner contract and workspace-only truth surface.
+
+### 2026-03-19 [agent: Codex][tech-radar-openclaw-ops-batch]
+- Done: Added `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_batch.md` for the latest AlphaClaw, OpenShell, Scrapling, autoresearch, and Figr pass; added `AlphaClaw` and `OpenClaw + Scrapling` to `TECH_RADAR.md` as `TRIAL`; added `OpenShell` as `ASSESS`; archived `autoresearch` and `Figr.design`; and queued the new AlphaClaw, Scrapling, and hooks-prompt follow-up work in `DNA/INBOX.md`.
+- Next: Trial `AlphaClaw` first because it has the strongest primary-source evidence and cleanest island fit, then test the Scrapling path in one bounded research task if the OpenClaw island remains stable.
+- Blocked: `OpenShell` is still sourced mainly from a throttled Instagram reel plus secondary chatter, so there is not yet enough durable upstream documentation to justify a `TRIAL` classification.
+- Decisions: Keep duplicate Magic Animator coverage out of the live radar, and prefer an evidence-weighted downgrade to `ASSESS` when the founder verdict is stronger than the available source quality.
+
+### 2026-03-19 [agent: Codex][tech-radar-nemotron-super]
+- Done: Added `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_nemotron-super.md`, promoted the existing Nemotron row in `TECH_RADAR.md` from `ASSESS` to `TRIAL`, and queued a bounded local-Ollama trial in `DNA/INBOX.md`.
+- Next: Run one contained OpenClaw-side trial with the local Ollama path and compare quality, speed, and operational cost against the current worker-model mix before treating Nemotron as a default worker brain.
+- Blocked: NVIDIA's official materials advertise up to `1M` context, but the current Ollama library listing exposes `256K` for the local model entry, so the first trial should not assume full `1M` local context without confirmation.
+- Decisions: Promote Nemotron based on primary-source evidence from NVIDIA and Ollama, but record the local-context mismatch explicitly so the trial stays honest and bounded.
+
+### 2026-03-19 [agent: Codex][tech-radar-march-14-15-reconciliation]
+- Done: Added `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_march-14-15-review.md` to reconcile the March 14-15 batch against the newer OpenClaw trials, kept `skills.sh` and `claude-mem` as `TRIAL`, downgraded `Paperclip` to `ASSESS`, archived `AionUi` and `SuperClaude Framework`, and updated the inbox to replace stale trial tasks with steal-only follow-ups.
+- Next: Prioritize the clear winners (`skills.sh`, `claude-mem`, `AlphaClaw`) and only revisit `Paperclip` after the current OpenClaw ops stack is stable.
+- Blocked: None; this was a fit-and-priority reconciliation pass rather than a source-verification problem.
+- Decisions: Prefer one primary UI-management trial (`AlphaClaw`) over running overlapping desktop-management layers in parallel, and keep heavyweight orchestration experiments parked until the simpler operational wins are proven.
+
+### 2026-03-19 [agent: Codex][tech-radar-priority-shortlist]
+- Done: Added `/home/evo/workspace/DNA/ops/tech-radar-intake/2026-03-19_priority-shortlist.md`, inserted a `Priority Trial Shortlist` synthesis row into `TECH_RADAR.md`, and added an explicit ordered execution block for `AlphaClaw`, `skills.sh`, `claude-mem`, and `NVIDIA Nemotron 3 Super` to `DNA/INBOX.md`.
+- Next: Execute the shortlist one branch at a time in the documented order: `AlphaClaw`, then `skills.sh` plus `claude-mem`, then `NVIDIA Nemotron 3 Super`.
+- Blocked: The local Nemotron path still needs real hardware validation, and `AlphaClaw` must keep Google Workspace or Drive paths disabled to stay within current workspace policy.
+- Decisions: Keep the shortlist as a synthesis layer on top of existing tool rows rather than inventing new per-tool statuses or duplicating the same fit analysis again.
+
+### 2026-03-19 [agent: Codex][research-vault-scaffold]
+- Done: Created a sidecar research vault scaffold at `/home/evo/workspace/_sandbox/research_vault` for the Obsidian-first knowledge layer, added starter home, schema, inbox, review queue, and CEO/CTO report notes, added reusable templates for manual capture, normalized notes, and review reports, and added `/home/evo/workspace/_scripts/research-capture.sh` plus `just research-capture` for fast founder note capture.
+- Next: Add the first real normalized notes for the target source set, then decide what crawler or importer path should feed the vault without writing into DNA.
+- Blocked: The previously referenced `gateways/openclaw/` island is not present in this workspace right now, so the first scaffold lives under `_sandbox/` rather than an OpenClaw-owned path.
+- Decisions: The research layer is a sidecar sandbox, not DNA; Obsidian is the hub and SSOT for this research surface, and role-based review turns research noise into signal before any human-led promotion into governed docs.
+
+### 2026-03-19 [agent: Codex][research-vault-obsidian-fresh-start]
+- Done: Added a fresh-vault setup note at `/home/evo/workspace/_sandbox/research_vault/OBSIDIAN_SETUP.md` and minimal Obsidian config under `/home/evo/workspace/_sandbox/research_vault/.obsidian/` so the new research vault can be opened as a clean dedicated Obsidian vault without depending on any previous local Obsidian state.
+- Next: Reinstall or reopen Obsidian against the research vault path, then decide whether any pieces from the old `Evolution_Brain` structure are worth selectively reintroducing.
+- Blocked: None.
+- Decisions: After the local reset, treat the research vault as the clean starting point rather than trying to reconstruct or merge the previous personal vault immediately.
+
+### 2026-03-19 [agent: Codex][research-vault-obsidian-install]
+- Done: Installed Obsidian desktop on Windows via `winget`, registered the new research vault path in `%APPDATA%\\Obsidian\\obsidian.json`, and added `/home/evo/workspace/_scripts/open-research-vault.ps1` plus `just research-vault-open` as a simple launcher for the fresh research vault.
+- Next: Open the fresh vault once in the desktop app, confirm the default landing flow around `HOME.md`, then begin adding the first real source and manual-capture notes.
+- Blocked: Obsidian still retains older vault registrations in local app state, so the user may want to close or ignore those rather than deleting them immediately.
+- Decisions: The fresh research vault is now the preferred Obsidian starting point for the sidecar research layer; the old vault registrations remain as historical local app entries until explicitly cleaned up.
+
+### 2026-03-19 [agent: Codex][research-vault-source-seed]
+- Done: Added `/home/evo/workspace/_scripts/seed_research_sources.py`, seeded the research vault with last-six-month website digests for Tokinvest and Evolution Stables plus source-profile notes for Tokinvest X, Evolution X, Alex Baddeley LinkedIn, and the Evolution LinkedIn admin URL, and linked those seeded sources from the vault home for immediate review.
+- Next: Add a stronger social-timeline ingestion path if X or LinkedIn post-level capture becomes a priority, and start promoting the highest-signal source items into entity, topic, and review notes.
+- Blocked: Public website capture works now, but social timelines remain profile-level only in this first pass because those surfaces are more likely to need auth-aware or anti-bot-aware crawling.
+- Decisions: The initial knowledge-repository seed prioritizes reliable public website capture plus explicit social-source registration over brittle pseudo-scraping of gated or unstable social timelines.
+
+### 2026-03-19 [agent: Codex][research-vault-windows-mirror]
+- Done: Created a Windows-local Obsidian mirror at `C:\Users\Evo\Research_Vault`, added `/home/evo/workspace/_scripts/research-vault-sync.ps1` plus `just research-vault-pull` and `just research-vault-push`, updated the launcher to target the local mirror, and documented the mirror-based sync workflow in `OBSIDIAN_SETUP.md`.
+- Next: Open the local mirror in Obsidian, confirm editing works cleanly, then use the explicit pull/push flow until or unless a more automatic sync path is warranted.
+- Blocked: Windows Obsidian hit a watcher error on the raw WSL UNC path, so the local mirror is required for now.
+- Decisions: The workspace copy remains canonical for the sidecar, while the Windows-local mirror exists as the UI-friendly Obsidian editing surface.
+
+### 2026-03-20 [agent: Codex][github-sync-hardening]
+- Done: Reviewed the required workspace context chain, confirmed `Badders80/workspace` remains the curated analysis mirror and `Badders80/workspace_full` remains the broad snapshot surface, and hardened both sync scripts so reviewed hermes-agent sample-token docs and tests no longer block mirror exports while real secret scanning stays active.
+- Next: Use the two sync scripts for fresh GitHub pushes, and only expand the sample-secret allowlist when a reviewed documentation or test fixture is clearly using placeholder tokens rather than live credentials.
+- Blocked: Concurrent `wsl.exe` calls from this desktop thread are unreliable, so git and export operations should be run sequentially from here.
+- Decisions: Keep `workspace` on the curated mirror path and `workspace_full` on the broad export path; keep vault backups and local reference clones out of the curated mirror commit path.
+
 ## Context Chain
 ← inherits from: /home/evo/workspace/DNA/AGENTS.md
 → overrides by: none

@@ -1,6 +1,6 @@
 # AI Session Bootstrap
 Version: v2.2.0
-Updated: 2026-03-16
+Updated: 2026-03-19
 Status: ACTIVE - STACK registry authority model applied
 
 ## Canonical Root
@@ -42,10 +42,10 @@ Status: ACTIVE - STACK registry authority model applied
 - Evolution_Platform: `/home/evo/workspace/projects/Evolution_Platform`
 - SSOT_Build: `/home/evo/workspace/projects/SSOT_Build`
 - Evolution_Content: `/home/evo/workspace/projects/Evolution_Content`
-- Evolution_Marketplace: `/home/evo/workspace/projects/Evolution_Marketplace`
 
 ## Deferred Or Archived
 - `seo-baseline` is archived out of the active platform surface as of 2026-03-12.
+- `Evolution_Marketplace` was archived out of the active workspace surface on 2026-03-19.
 - Evolution_Studio remains a deferred rebuild workstream.
 - Evolution_Intelligence remains a deferred rebuild workstream.
 - External or vendor infrastructure stays outside the active merge core until re-scoped.

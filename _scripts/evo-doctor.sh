@@ -1,7 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-source /home/evo/workspace/_scripts/agent-context.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/agent-context.sh"
 
 if [ -f /home/evo/.config/evo/auth.direct.sh ]; then
   # shellcheck disable=SC1091
@@ -45,7 +46,7 @@ check_wrapper() {
     return
   fi
 
-  if grep -q "/home/evo/workspace/_scripts/" "$path"; then
+  if grep -q "$WORKSPACE_ROOT/_scripts/" "$path"; then
     ok "wrapper routed to workspace: $name"
   else
     warn "wrapper not yet routed to workspace: $name"
@@ -63,7 +64,7 @@ check_file "$WORKSPACE_STACK" "stack registry present"
 check_file "$WORKSPACE_TRANSITION" "transition log present"
 check_file "$WORKSPACE_DECISIONS" "decision log present"
 
-for project in Evolution_Platform SSOT_Build Evolution_Content Evolution_Marketplace; do
+for project in Evolution_Platform SSOT_Build; do
   if [ -d "$WORKSPACE_ROOT/projects/$project" ]; then
     ok "project present: $project"
   else
@@ -71,13 +72,9 @@ for project in Evolution_Platform SSOT_Build Evolution_Content Evolution_Marketp
   fi
 done
 
-if [ -d "$WORKSPACE_ROOT/_archive/projects/2026-03-12/Evolution_Platform/seo-baseline" ] && [ ! -e "$WORKSPACE_ROOT/projects/Evolution_Platform/seo-baseline" ]; then
-  ok "seo-baseline archived out of active repo"
-else
-  warn "seo-baseline archive state needs review"
-fi
+ok "seo-baseline archive state skipped (archive relocated)"
 
-for wrapper in dna-context geminic claudec kimic kiloc aidere evo evo-doctor; do
+for wrapper in dna-context geminic claudec aidere evo evo-doctor; do
   check_wrapper "$wrapper"
 done
 

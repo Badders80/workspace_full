@@ -1,6 +1,8 @@
 # Starred Repo Registry
 
-Auto-generated from GitHub stars via `scripts/sync_starred_repos.mjs`.
+Retained markdown snapshot from an earlier GitHub stars sync.
+The old `scripts/sync_starred_repos.mjs` pipeline and JSON registry are not
+part of the active workspace surface.
 Source user: `Badders80`
 Generated: 2026-02-28T07:42:27.183Z
 
@@ -61,4 +63,3 @@ Generated: 2026-02-28T07:42:27.183Z
 | [Badders80/Evolution_Studio](https://github.com/Badders80/Evolution_Studio) | Assess | General | 1 | 2026-02-19 | yes | Auto-added from GitHub stars sync; pending review. |
 | [Badders80/Local_LLM](https://github.com/Badders80/Local_LLM) | Assess | LLM Infrastructure | 1 | 2026-02-19 | yes | Auto-added from GitHub stars sync; pending review. |
 | [Badders80/Brand_Voice](https://github.com/Badders80/Brand_Voice) | Assess | General | 1 | 2026-02-19 | yes | Auto-added from GitHub stars sync; pending review. |
-

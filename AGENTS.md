@@ -38,7 +38,7 @@ Workspace-level rules for `/home/evo/workspace`.
 - `/home/evo/workspace/_locks/`
 - `/home/evo/workspace/_logs/`
 - `/home/evo/workspace/_docs/`
-- `/home/evo/workspace/_archive/`
+- `/home/evo/_archive/` (external — outside workspace root, not indexed by agents)
 - `/home/evo/workspace/_sandbox/`
 - `/home/evo/workspace/models/`
 
@@ -54,7 +54,7 @@ Workspace-level rules for `/home/evo/workspace`.
 
 - `Evolution_Platform` is the main platform build surface.
 - `SSOT_Build` is the active SSOT design and contract surface.
-- `Evolution_Content` and `Evolution_Marketplace` are active and should stay aligned to workspace rules.
+- `Evolution_Content` is active and should stay aligned to workspace rules.
 - External or vendor infrastructure remains deferred.
 - `seo-baseline` is archived and off the active surface.
 

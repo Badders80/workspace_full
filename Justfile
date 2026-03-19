@@ -71,13 +71,33 @@ backlog:
 decisions:
     evo decisions
 
+# Quick capture into the sidecar research vault
+research-capture title body='':
+    bash /home/evo/workspace/_scripts/research-capture.sh "{{title}}" "{{body}}"
+
+# Launch Obsidian for the research vault from Windows PowerShell
+research-vault-open:
+    powershell -ExecutionPolicy Bypass -File "\\wsl.localhost\Ubuntu\home\evo\workspace\_scripts\open-research-vault.ps1"
+
+# Sync workspace vault -> local Windows Obsidian vault
+research-vault-pull:
+    powershell -ExecutionPolicy Bypass -File "\\wsl.localhost\Ubuntu\home\evo\workspace\_scripts\research-vault-sync.ps1" -Direction pull
+
+# Sync local Windows Obsidian vault -> workspace vault
+research-vault-push:
+    powershell -ExecutionPolicy Bypass -File "\\wsl.localhost\Ubuntu\home\evo\workspace\_scripts\research-vault-sync.ps1" -Direction push
+
+# Seed the research vault with the current website/profile source set
+research-seed:
+    bash -lc 'python3 /home/evo/workspace/_scripts/seed_research_sources.py'
+
 # Edit DNA
 dna:
     code /home/evo/workspace/DNA
 
 # Commit DNA changes
 dna-commit msg:
-    cd /home/evo/workspace/DNA && git add . && git commit -m "{{msg}}"
+    git -C /home/evo/workspace add DNA/ && git -C /home/evo/workspace commit -m "{{msg}}" -- DNA/
 
 # ═══════════════════════════════════════════════════════════
 # Navigation
@@ -131,8 +151,8 @@ update:
 # Backup DNA and projects
 backup:
     @echo "💾 Creating backup..."
-    @mkdir -p /home/evo/workspace/_archive/backups/auto
-    @tar czf "/home/evo/workspace/_archive/backups/auto/evo-backup-$(date +%Y%m%d-%H%M%S).tar.gz" \
+    @mkdir -p /home/evo/_archive/backups/auto
+    @tar czf "/home/evo/_archive/backups/auto/evo-backup-$(date +%Y%m%d-%H%M%S).tar.gz" \
         -C /home/evo/workspace \
         --exclude='node_modules' \
         --exclude='.next' \
@@ -141,7 +161,7 @@ backup:
         --exclude='models' \
         --exclude='.cache' \
         DNA projects _docs _locks _logs _sandbox _scripts AGENTS.md AI_SESSION_BOOTSTRAP.md Justfile MANIFEST.md 2>/dev/null
-    @echo "✅ Backup created in workspace/_archive/backups/auto/"
+    @echo "✅ Backup created in /home/evo/_archive/backups/auto/"
 
 # Full system check + update
 doctor: check backup
@@ -188,3 +208,9 @@ analysis-mirror:
 
 analysis-mirror-apply:
     bash /home/evo/workspace/_scripts/sync-analysis-mirror-git.sh --apply
+
+workspace-full:
+    bash /home/evo/workspace/_scripts/sync-workspace-full-git.sh --remote-url https://github.com/Badders80/workspace_full.git
+
+workspace-full-apply:
+    bash /home/evo/workspace/_scripts/sync-workspace-full-git.sh --apply --remote-url https://github.com/Badders80/workspace_full.git

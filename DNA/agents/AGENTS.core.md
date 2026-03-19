@@ -98,7 +98,7 @@ Reasoning Level Decision Rule
 - [C-34] Use LOW for single-file edits, UI tweaks, and changes under ~30 LOC.
 - [C-35] Use MEDIUM for scripts, cross-file logic, workflow updates, or guardrail design.
 - [C-36] Use HIGH/EXTRA HIGH for unknown failures, architectural changes, or multi-repo reasoning.
-- [C-38] For specialized tasks, check /home/evo/00_DNA/skills/INDEX.md for relevant skill files and follow them before proceeding.
+- [C-38] For specialized tasks, check /home/evo/workspace/DNA/skills/INDEX.md for relevant skill files and follow them before proceeding.
 - [C-39] For tasks >30 LOC or affecting >1 file: write a compact Execution Spec first (Goal / Constraints / Files / Verification). If the approach is non-obvious or touches critical paths, explicitly ask for approval before implementing. Otherwise, show the spec and proceed.
 - [C-40] Do not introduce new structural layers, frameworks, or conventions unless explicitly approved. Prefer existing patterns over new abstractions.
 - [C-41] Core rules should not be modified without stating the reason in a one-line comment above the change.

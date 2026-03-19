@@ -25,9 +25,9 @@ Consult `/home/evo/workspace/DNA/ops/TECH_RADAR.md` on demand only when checking
 
 ## Current Platform Snapshot
 
-- Active repos: `Evolution_Platform`, `SSOT_Build`, `Evolution_Content`, `Evolution_Marketplace`
+- Active repos: `Evolution_Platform`, `SSOT_Build`, `Evolution_Content`
 - Deferred rebuilds: `Evolution_Studio`, `Evolution_Intelligence`
-- Archived out of active surface: `Evolution_Platform/seo-baseline`
+- Archived out of active surface: `Evolution_Platform/seo-baseline`, `Evolution_Marketplace`
 
 ## Working Rules
 

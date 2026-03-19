@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="/home/evo"
+ROOT="/home/evo/workspace"
 OUT_DIR="$ROOT/_logs/audit_runs"
 CLAUDE_MODEL="${CLAUDE_AUDIT_MODEL:-opus}"
 
@@ -58,9 +58,9 @@ done
 
 mkdir -p "$OUT_DIR"
 
-KIMI_OUT="$OUT_DIR/KIMI_AUDIT_${DATE_TAG}.md"
 GEMINI_OUT="$OUT_DIR/GEMINI_AUDIT_${DATE_TAG}.md"
-GLM_OUT="$OUT_DIR/GLM_AUDIT_${DATE_TAG}.md"
+GROQ_OUT="$OUT_DIR/GROQ_AUDIT_${DATE_TAG}.md"
+ANTHROPIC_OUT="$OUT_DIR/ANTHROPIC_AUDIT_${DATE_TAG}.md"
 CODEX_OUT="$OUT_DIR/CODEX_AUDIT_${DATE_TAG}.md"
 CLAUDE_META_OUT="$OUT_DIR/CLAUDE_META_AUDIT_${DATE_TAG}.md"
 CLAUDE_META_SIGNAL_OUT="$OUT_DIR/CLAUDE_META_SIGNALS_${DATE_TAG}.md"
@@ -70,7 +70,7 @@ declare -a MISSING_REPORTS=()
 declare -a RED_FLAGS=()
 declare -a ALERTS=()
 
-for report in "$KIMI_OUT" "$GEMINI_OUT" "$GLM_OUT" "$CODEX_OUT"; do
+for report in "$GEMINI_OUT" "$GROQ_OUT" "$ANTHROPIC_OUT" "$CODEX_OUT"; do
   if [ -s "$report" ]; then
     if rg -q '^- Status: `SUCCESS`' "$report"; then
       FOUND_REPORTS+=("$report")
@@ -161,7 +161,7 @@ done < <(rg -i '^\s*ALERT:' "$tmp_out" 2>/dev/null || true)
   echo "- Status: \`${status}\`"
   echo
   echo "## Inputs"
-  echo "- First-level auditors: Kimi, Gemini, GLM-5 (z.ai), Codex"
+  echo "- First-level auditors: Gemini, Groq, Anthropic, Codex"
   echo "- Codex role in this flow: first-level auditor only"
   echo
   echo "### Found Reports"
@@ -193,10 +193,10 @@ done < <(rg -i '^\s*ALERT:' "$tmp_out" 2>/dev/null || true)
     echo
   fi
   echo "## Context Chain"
-  echo "← inherits from: /home/evo/AGENTS.md"
+  echo "← inherits from: /home/evo/workspace/AGENTS.md"
   echo "→ overrides by: none"
-  echo "→ live map: /home/evo/AI_SESSION_BOOTSTRAP.md"
-  echo "→ conventions: /home/evo/DNA/ops/CONVENTIONS.md"
+  echo "→ live map: /home/evo/workspace/AI_SESSION_BOOTSTRAP.md"
+  echo "→ conventions: /home/evo/workspace/DNA/ops/CONVENTIONS.md"
 } > "$CLAUDE_META_OUT"
 
 {
@@ -227,10 +227,10 @@ done < <(rg -i '^\s*ALERT:' "$tmp_out" 2>/dev/null || true)
   echo "- This runner provides decision input only; operator makes final go/no-go call."
   echo
   echo "## Context Chain"
-  echo "← inherits from: /home/evo/AGENTS.md"
+  echo "← inherits from: /home/evo/workspace/AGENTS.md"
   echo "→ overrides by: none"
-  echo "→ live map: /home/evo/AI_SESSION_BOOTSTRAP.md"
-  echo "→ conventions: /home/evo/DNA/ops/CONVENTIONS.md"
+  echo "→ live map: /home/evo/workspace/AI_SESSION_BOOTSTRAP.md"
+  echo "→ conventions: /home/evo/workspace/DNA/ops/CONVENTIONS.md"
 } > "$CLAUDE_META_SIGNAL_OUT"
 
 rm -f "$tmp_out"

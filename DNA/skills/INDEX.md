@@ -1,25 +1,25 @@
-# Available Skills
+# Skills Index
 
-- `ui_tweaks.md` — Safe UI component changes (CSS, Tailwind, minor JSX adjustments)
-- `multi_file_debug.md` — Debugging strategy for changes across multiple files
-- `release_checklist.md` — Pre-deploy verification steps
-- `comfyui_vram_safety.md` — VRAM-safe workflow edits (if/when added)
-- `registry/approved_sources.md` — Curated repositories and tools (don't reinvent the wheel)
-- `registry/starred_repo_registry.md` — Auto-generated starred repo review registry
-- `registry/starred_repo_registry.json` — Canonical starred repo registry (status/category/notes)
+Status: ACTIVE - truth-only surface.
 
-## 🔄 Star Sync
+Only list files that exist in the live workspace. If a skill is not present
+here as a real file, do not assume an agent can load it.
 
-- Run `node scripts/sync_starred_repos.mjs` to sync GitHub stars into registry.
-- New repos are auto-marked as `Assess` and existing manual statuses are preserved.
+## Active Files
 
-## 📊 Process & Evaluation
+- `registry/approved_sources.md` - curated build/adopt source list
+- `registry/starred_repo_registry.md` - human-readable snapshot of reviewed or
+  starred repositories
 
-- `TECH_RADAR.md` — Tool evaluation tracker (Reject/Assess/Trial/Adopt)
-- `_archive/2026-02/INBOX.md` — Archived rapid capture log
+## Rebuild Rule
 
-## 🧠 System Optimization
+- File-based execution skills are being rebuilt. Do not reference older names
+  such as `ui_tweaks.md`, `multi_file_debug.md`, `release_checklist.md`, or
+  `comfyui_vram_safety.md` unless those files are reintroduced.
+- The old JSON star registry and sync script are out of the active workspace
+  surface until a replacement is added and documented.
 
-- `MEMORY_OPTIMIZATION.md` — WSL2 + VS Code memory fixes
-- Run `just memory` to check RAM usage
-- Run `just optimize-memory` for full cleanup
+## Research Surfaces
+
+- `DNA/ops/TECH_RADAR.md` - consult-on-demand tool evaluation journal
+- `DNA/ops/DECISION_LOG.md` - historical decisions and rationale

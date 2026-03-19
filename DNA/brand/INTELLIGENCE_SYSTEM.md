@@ -4,7 +4,7 @@
 In any conflict, apply rules in this strict order:
 1. BRAND_SYSTEM.md + INTELLIGENCE_SYSTEM.md (this layer)
 2. MEGA_BRAND_GUIDE.md (values & positioning only, archived)
-3. Source material in /00_DNA/brand-identity/ (reference only)
+3. Archived pre-workspace brand source material (reference only)
 
 Last updated: 2026-03-01 | Version 2026.3
 
@@ -16,7 +16,7 @@ Hard Restriction: NO ownership mentions. NO Evolution Stables branding.
                   NO Tokinvest/VARA references. Ever.
 
 Replaces:
-- 00_DNA/brand-identity/EVOLUTION_INTELLIGENCE.md
+- pre-workspace EVOLUTION_INTELLIGENCE.md
 
 Internal shorthand: This file defines the Awareness Layer of the Evolution Funnel
 (formerly called “GTI” internally; do not use that term in external content).

@@ -6,7 +6,7 @@
 ---
 
 ## 1. Primary Runtimes
-- **Python:** 3.12.3 (Venvs at `/home/evo/projects/[project]/venv`)
+- **Python:** 3.12.3 (Venvs at `/home/evo/workspace/projects/[project]/venv`)
 - **Node.js:** Latest LTS (Next.js 14 / TypeScript)
 - **Database:** Supabase (PostgreSQL) for Expert Ledger and Flucs.
 
